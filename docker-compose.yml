@@ -21,6 +21,8 @@ services:
     environment:
       - PORT=5001
       - DATABASE_URL=postgres://note_app_user:note_app_password@postgres-db:5432/note_app_db
+      - ACCESS_TOKEN_SECRET=${ACCESS_TOKEN_SECRET}
+      - REFRESH_TOKEN_SECRET=${REFRESH_TOKEN_SECRET}
     depends_on:
       - postgres-db
     volumes:
