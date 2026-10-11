@@ -11,6 +11,14 @@ import { Router } from 'express';
 
 const router = Router();
 
+const cookieOptions = {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: process.env.NODE_ENV === 'production' ? 'Strict' : 'Lax',
+    maxAge: 30 * 2 * 60 * 1000, // 1 day
+    domain: 'localhost'
+}
+
 const refresh_tokens = [];
 
 
@@ -57,10 +65,10 @@ router.post('/auth/login', async (req, res) => {
                 const access_token = generateAccessToken(token_payload);
                 const refresh_token = jwt.sign(token_payload, process.env.REFRESH_TOKEN_SECRET);
                 refresh_tokens.push(refresh_token)
+                // Respond to client the access token as cookie
+                res.cookie('access_token', access_token, cookieOptions)
                 return res.status(200).json({
                     message: 'Authenticated Successfully',
-                    access_token: access_token,
-                    refresh_token: refresh_token,
                     user: token_payload
                 })
             } else {
@@ -82,15 +90,20 @@ router.post('/token', (req, res) => {
     if (refresh_token == null) return res.sendStatus(403);
     if (!refresh_tokens.includes(refresh_token)) return res.sendStatus(403);
     jwt.verify(refresh_token, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
-        if (err) res.sendStatus(403);
+        if (err) return res.sendStatus(403);
         const access_token = generateAccessToken({ username: user.username, id: user.id})
         res.json({ access_token: access_token});
     })
 })
 
+router.post('/logout', (req, res) => {
+    res.cookie('access_token', '', {...cookieOptions, maxAge: 1});
+    res.json({ message: 'Logged out successfully'});
+})
+
 
 export function generateAccessToken(user){
-    return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '30s' })
+    return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET)
 }
 
 export default router;

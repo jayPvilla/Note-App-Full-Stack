@@ -24,6 +24,7 @@ services:
       - DATABASE_URL=postgres://note_app_user:note_app_password@postgres-db:5432/note_app_db
       - ACCESS_TOKEN_SECRET=${ACCESS_TOKEN_SECRET}
       - REFRESH_TOKEN_SECRET=${REFRESH_TOKEN_SECRET}
+      - NODE_ENV=development  # Forces secure: false so localhost works
     depends_on:
       - postgres-db
     volumes:

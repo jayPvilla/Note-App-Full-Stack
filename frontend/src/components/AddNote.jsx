@@ -28,11 +28,20 @@ const AddNote = ({ notes, set_note }) => {
         };
 
         try {
-            const response = await axios.post('http://localhost:5001/note', new_note);
-            set_note([...notes, new_note])
+            // Added withCredentials config option so cookies are allowed to pass through
+            const response = await axios.post('http://localhost:5001/note', new_note, {
+                withCredentials: true 
+            });
+            
+            // Append response.data (which has the Postgres 'id') instead of the local object
             console.log(response)
+            set_note([...notes, response.data]); 
+            
+            // Optional UX enhancement: Clear the input fields after a successful add
+            set_title("");
+            set_content("");
         } catch (err) {
-            console.error(err)
+            console.error(err);
         }
 
     }
