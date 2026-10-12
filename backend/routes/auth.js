@@ -96,7 +96,7 @@ router.post('/token', (req, res) => {
 })
 
 router.post('/logout', (req, res) => {
-    res.cookie('access_token', '', {...cookieOptions, maxAge: 1});
+    res.clearCookie('access_token', cookieOptions);
     res.json({ message: 'Logged out successfully'});
 })
 
