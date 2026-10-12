@@ -15,8 +15,7 @@ const cookieOptions = {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: process.env.NODE_ENV === 'production' ? 'Strict' : 'Lax',
-    maxAge: 30 * 2 * 60 * 1000, // 1 day
-    domain: 'localhost'
+    maxAge: 30 * 2 * 60 * 1000 // 1 day
 }
 
 const refresh_tokens = [];

@@ -65,7 +65,7 @@ router.put('/note', authenticateToken, async (req, res) => {
 
 
 // 4. DELETE A NOTE (Ensures user owns the note)
-router.delete('/note', authenticateToken, async (req, res) => {
+router.delete('/note/:id', authenticateToken, async (req, res) => {
     try {
         const { id } = req.params;
         const userId = req.user.id;

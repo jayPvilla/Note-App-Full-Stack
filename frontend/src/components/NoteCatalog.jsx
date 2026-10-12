@@ -31,7 +31,7 @@ const NoteCatalog = ({ notes, set_note }) => {
   async function deleteNote(id){
     const updated_notes = notes.filter(note => note.id !== id)
     try {
-      const response = await axios.delete(API_URL, {
+      const response = await axios.delete(`${API_URL}/${id}`, {
         data: {
           id: id
         }
